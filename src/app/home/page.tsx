@@ -56,10 +56,10 @@ function HomePage() {
           max cap of <span className="font-bold">5</span> users who are limited
           to just <code>200mb</code> of storage.
         </p>
-        <p>
+        {/* <p>
           I just did this project for fun and i have no plans of marketing this
           out to anyone!
-        </p>
+        </p> */}
       </section>
       <footer className="dark:bg-slate-600 bg-slate-300 mt-5 border-t border-solid py-2 px-3 text-primary-white text-center">
         <p>
@@ -69,7 +69,7 @@ function HomePage() {
             className=" font-semibold"
             target="_blank"
           >
-            Nathan Somto
+            The A team
           </a>{" "}
           {new Date().getFullYear()}
         </p>

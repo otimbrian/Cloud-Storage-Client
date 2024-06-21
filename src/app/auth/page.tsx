@@ -11,29 +11,42 @@ import { collection, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
 import { auth, db } from "@/config/firebase";
 import { useAuth, AuthContext } from "@/hooks/useAuth";
 import { UserType } from "@/index";
+
 const MAX_SIZE = 5;
+
 function AuthPage() {
   const [isLoading, setIsLoading] = useState(false);
   const { theme } = useTheme();
   const { setAuthState, authState: {user} } = useAuth() as unknown as AuthContext;
   const navigate = useNavigate();
+
   useEffect(() => {
     if(user !== null){
       navigate(`/dashboard/${user.uid}`);
     }
-  }, [user])
+  }, [navigate, user])
+
   async function checkForUserLimit() {
     const userSnapshot = await getDocs(collection(db, "users"));
     return userSnapshot.docs.length === MAX_SIZE;
   }
+  
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+
     e.preventDefault();
     setIsLoading(true);
+
     try {
       const isMax = await checkForUserLimit();
       if (isMax) throw new Error("Reached maximium number of users");
+
+      console.log("Passed here")
       const provider = new GoogleAuthProvider();
       const cred = await signInWithPopup(auth, provider);
+
+      console.log("credentials -----> ", cred)
+
+      console.log("Passed here. ----> to -->")
       const userRef = doc(db, "users", cred.user.uid);
       const userSnapshot = await getDoc(userRef);
       if (userSnapshot.exists()) {
@@ -52,6 +65,7 @@ function AuthPage() {
       navigate(`/dashboard/${cred.user.uid}`);
     } catch (err) {
       if (err instanceof Error) {
+        console.log("Error ----->", err)
         toast({
           title: "Failed to Sign in",
           description: err.message,
